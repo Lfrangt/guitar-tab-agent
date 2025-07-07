@@ -1,0 +1,43 @@
+# 阿里云函数计算 FC 3.0 配置文件
+# 使用命令：s deploy
+
+edition: 3.0.0
+name: guitar-tab-ai
+access: default
+
+resources:
+  guitar-tab-ai:
+    component: fc3
+    props:
+      region: cn-hangzhou # 可选：cn-beijing, cn-shanghai, cn-hangzhou
+      functionName: guitar-tab-ai
+      description: 吉他谱AI系统 - 音频转吉他谱
+      runtime: custom-container
+      timeout: 300
+      memorySize: 1024
+      instanceConcurrency: 1
+      
+      # 容器配置
+      customContainerConfig:
+        image: registry.cn-hangzhou.aliyuncs.com/guitar-tab-ai/app:latest
+        port: 8501
+        
+      # HTTP触发器
+      triggers:
+        - triggerName: http-trigger
+          triggerType: http
+          description: HTTP触发器
+          qualifier: LATEST
+          triggerConfig:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            
+      # 环境变量
+      environmentVariables:
+        PYTHONPATH: /app
+        STREAMLIT_SERVER_PORT: "8501"
+        STREAMLIT_SERVER_ADDRESS: "0.0.0.0"
