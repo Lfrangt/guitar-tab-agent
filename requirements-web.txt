@@ -1,0 +1,30 @@
+# 专门用于Web部署的轻量级依赖
+# 移除了一些在云平台上难以安装的包
+
+# 核心音频处理
+librosa>=0.9.2
+soundfile>=0.10.3
+scipy>=1.9.0
+numpy<2,>=1.21.0
+
+# 音高检测 - CREPE模型
+crepe>=0.0.12
+tensorflow>=2.10.0
+
+# Web界面
+streamlit>=1.12.0
+plotly>=5.10.0
+pandas>=1.4.0
+
+# 可视化
+matplotlib>=3.5.0
+
+# API和工具
+requests>=2.28.0
+python-dotenv>=0.20.0
+
+# 图像处理
+Pillow>=9.2.0
+
+# 系统工具
+ffmpeg-python>=0.2.0
