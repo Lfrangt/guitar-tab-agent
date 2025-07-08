@@ -1,24 +1,20 @@
-# 国内部署专用Docker配置
+# 简化版Docker配置，确保构建成功
 FROM python:3.10-slim
 
-# 使用阿里云镜像源加速
-RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
-    sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
+# 设置工作目录
+WORKDIR /app
 
-# 安装系统依赖
+# 安装系统依赖（精简版）
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
-# 设置工作目录
-WORKDIR /app
+# 复制依赖文件
+COPY requirements-web.txt ./requirements.txt
 
 # 配置pip使用清华镜像源
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
-
-# 复制依赖文件
-COPY requirements-cn.txt ./requirements.txt
 
 # 安装Python依赖
 RUN pip install --no-cache-dir -r requirements.txt
@@ -31,11 +27,6 @@ RUN mkdir -p output/logs output/tabs model
 
 # 暴露端口
 EXPOSE 8501
-
-# 设置环境变量
-ENV PYTHONPATH=/app
-ENV STREAMLIT_SERVER_PORT=8501
-ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
 
 # 启动应用
 CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
